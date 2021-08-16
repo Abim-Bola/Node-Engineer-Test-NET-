@@ -20,4 +20,13 @@ export default Env.rules({
   APP_KEY: Env.schema.string(),
   APP_NAME: Env.schema.string(),
   NODE_ENV: Env.schema.enum(['development', 'production', 'testing'] as const),
+
+  DB_CONNECTION: Env.schema.enum(['mysql', 'mysql_socket', 'sqlite'] as const),
+  MYSQL_HOST: Env.schema.string({ format: 'host' }),
+  MYSQL_PORT: Env.schema.number(),
+  MYSQL_USER: Env.schema.string.optional(),
+  MYSQL_PASSWORD: Env.schema.string.optional(),
+  MYSQL_DB_NAME: Env.schema.string.optional(),
+
+  PAYSTACK_SECRET_KEY: Env.schema.string.optional()
 })
