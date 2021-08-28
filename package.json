@@ -26,6 +26,7 @@
     "@adonisjs/core": "^5.1.11",
     "@adonisjs/lucid": "^15.0.3",
     "@adonisjs/repl": "^3.1.5",
+    "@adonisjs/view": "^3.1.0",
     "axios": "^0.21.1",
     "jsonwebtoken": "^8.5.1",
     "luxon": "^2.0.2",

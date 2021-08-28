@@ -1,12 +1,12 @@
-import  { PaystackService } from "./paystack";
-import { creditWallet, debitWallet } from "./transactions";
+const { PaystackService } = require("./paystack");
+const { Type } = require("./transaction");
 
-module.exports.transactionType = {
+export const transactionType = {
   credit: PaystackService,
   debit: null,
 };
 
-module.exports.walletTransaction = {
-  credit: creditWallet,
-  debit: debitWallet,
+export const walletTransaction = {
+  credit: Type.creditWallet,
+  debit: Type.debitWallet,
 };

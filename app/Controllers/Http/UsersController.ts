@@ -17,8 +17,8 @@ export default class UsersController {
     try {
       const payload = await request.validate(SignUpValidator);
       const { email, first_name, last_name, password } = payload;
-      const findUser = await User.query().where('email', email);
-      if (findUser.length > 0) {
+      const findUser = await User.query().where('email', email).first();
+      if (findUser) {
         return conflictResponse({
           response,
           message: 'Account already exists',
@@ -43,9 +43,22 @@ export default class UsersController {
     try {
       const payload = await request.validate(LogInValidator);
       const { email, password } = payload;
-      const user = await User.query().where('email', email);
+      const user = await User.query().where('email', email).first();
+      // @ts-ignore
+      console.log(user)
+      if(!user){
+        console.log('hey')
+        throw new Error('error occcured');
+      }
+      // @ts-ignore
+      const serialize = user.map((u) => {
+        console.log(u.serialize())
+        return u
+        })
+      console.log('hmm')
+      
       const serializeUser = user.map((u) => u.serialize())
-      console.log(serializeUser[0].password)
+      console.log(serializeUser[0].password, 'password')
       console.log('user', serializeUser);
       if (!serializeUser) {
         return conflictResponse({
@@ -68,6 +81,8 @@ export default class UsersController {
         message: 'Login successfully',
         data,
       });
-    } catch (error) {}
+    } catch (error) {
+      return error
+    }
   }
 }
