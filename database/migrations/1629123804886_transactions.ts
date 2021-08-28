@@ -1,16 +1,16 @@
 import BaseSchema from '@ioc:Adonis/Lucid/Schema'
 
-export default class Wallets extends BaseSchema {
-  protected tableName = 'wallets'
+export default class Transactions extends BaseSchema {
+  protected tableName = 'transactions'
 
   public async up () {
     this.schema.createTable(this.tableName, (table) => {
       table.bigIncrements('id')
-      table.decimal('balance').defaultTo(0).notNullable()
-      table.string('account_number').notNullable()
-      table.string('bank_code').notNullable()
-      table.string('account_name').notNullable()
-      table.string('user').unique().notNullable()
+      table.decimal('balanceBefore').notNullable()
+      table.decimal('balanceAfter').notNullable()
+      table.string('refrence').notNullable()
+      table.string('wallet_id').notNullable()
+      table.enum('type', ['CREDIT', 'DEBIT']).notNullable()
       /**
        * Uses timestamptz for PostgreSQL and DATETIME2 for MSSQL
        */
