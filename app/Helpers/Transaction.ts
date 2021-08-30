@@ -1,5 +1,5 @@
-const Transaction = require("../models/transaction");
-const Wallet = require("../models/wallet");
+import Transaction from 'App/Models/Transaction'
+import Wallet from 'App/Models/Wallet';
 const { v4: uuidv4 } = require("uuid");
 
 /**
@@ -9,19 +9,24 @@ const { v4: uuidv4 } = require("uuid");
  */
 export const Type = {
 creditWallet: async ({ ...params })  => { 
-  const { walletId, amount } = params;
-  const wallet = await Wallet.query().where('id', walletId);
-  const balanceAfter = parseInt(wallet.balance + amount);
-  const transaction = await Transaction.create({
-    reference: uuidv4(),
-    balanceBefore: wallet.balance,
-    balanceAfter,
-    direction: "credit",
-    wallet: wallet._id,
-  });
-  wallet.balance = balanceAfter;
-  await wallet.save();
-  return transaction;
+  try {
+    const { walletId, amount } = params;
+    const wallet = await Wallet.query().where('id', walletId);
+    const serializeWallet = wallet.map((w) => w.serialize())
+    const balance_after = parseInt(serializeWallet[0].balance + amount);
+    const transaction = await Transaction.create({
+      reference: uuidv4(),
+      balance_before: balance_after,
+      balance_after,
+      type: "CREDIT",
+      wallet_id: serializeWallet[0].id
+    });
+    serializeWallet[0].balance = balance_after;
+    await transaction.save();
+    return transaction;
+  } catch (error) {
+    return error;
+  }
 },
 
 /**
@@ -32,16 +37,17 @@ creditWallet: async ({ ...params })  => {
 debitWallet: async ({ ...params }) => {
   const { walletId, amount } = params;
   const wallet = await Wallet.query().where('id', walletId);
-  const balanceAfter = parseInt(wallet.balance - amount);
+  const serializeWallet = wallet.map((w) => w.serialize())
+  const balance_after = parseInt(serializeWallet[0].balance - amount);
   const transaction = await Transaction.create({
     reference: uuidv4(),
-    balanceBefore: wallet.balance,
-    balanceAfter,
-    direction: "debit",
-    wallet: wallet.id,
+    balance_before: serializeWallet[0].balance,
+    balance_after,
+    type: "DEBIT",
+    wallet_id: serializeWallet[0].id,
   });
-  wallet.balance = balanceAfter;
-  await wallet.save();
+  serializeWallet[0].balance = balance_after;
+  await transaction.save();
   return transaction;
 }
 }

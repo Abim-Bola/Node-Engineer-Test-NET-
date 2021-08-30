@@ -90,6 +90,7 @@ export const PaystackService = {
           ...data,
         },
       });
+      console.log(res.data.data)
       return res.data.data;
     } catch (error) {
       return error.response.data;
