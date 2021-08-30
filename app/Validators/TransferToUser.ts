@@ -9,7 +9,6 @@ export default class TransferToUser {
 		reason: schema.string(),
 		type: schema.string(),
 		amount: schema.number(),
-		email: schema.string(),
 	  })
 	  public messages = {}
   }

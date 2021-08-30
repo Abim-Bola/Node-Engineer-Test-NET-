@@ -12,14 +12,14 @@ export default class Transaction extends BaseModel {
   public wallet_id: number
 
   @column()
-  public refrence: string
+  public reference: string
 
   @column()
-  public balanceBefore: number
+  public balance_before: number
  
   
   @column()
-  public balanceAfter: number
+  public balance_after: number
 
   @column.dateTime({ autoCreate: true })
   public createdAt: DateTime
