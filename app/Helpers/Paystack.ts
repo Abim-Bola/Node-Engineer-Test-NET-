@@ -78,17 +78,23 @@ export const PaystackService = {
     return res.data.data;
   },
   transfer: async (data) => {
-    const res = await axios({
-      url: `https://api.paystack.co/transfer`,
-      method: "post",
-      headers: {
-        Authorization: apiKey,
-      },
-      data: {
-        source: "balance",
-        ...data,
-      },
-    });
-    return res.data.data;
+    try {
+      const res = await axios({
+        url: `https://api.paystack.co/transfer`,
+        method: "post",
+        headers: {
+          Authorization: apiKey,
+        },
+        data: {
+          source: "balance",
+          ...data,
+        },
+      });
+      console.log(res.data.data)
+      return res.data.data;
+    } catch (error) {
+      return error.response.data;
+    }
+   
   },
 };

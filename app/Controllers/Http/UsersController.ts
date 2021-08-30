@@ -17,8 +17,8 @@ export default class UsersController {
     try {
       const payload = await request.validate(SignUpValidator);
       const { email, first_name, last_name, password } = payload;
-      const findUser = await User.query().where('email', email);
-      if (findUser.length > 0) {
+      const findUser = await User.query().where('email', email).first();
+      if (findUser) {
         return conflictResponse({
           response,
           message: 'Account already exists',
@@ -44,30 +44,28 @@ export default class UsersController {
       const payload = await request.validate(LogInValidator);
       const { email, password } = payload;
       const user = await User.query().where('email', email);
+      // @ts-ignore
       const serializeUser = user.map((u) => u.serialize())
-      console.log(serializeUser[0].password)
+      console.log(serializeUser[0].password, 'password')
       console.log('user', serializeUser);
       if (!serializeUser) {
         return conflictResponse({
           response,
-          message: 'Account already exists',
+          message: 'Account doesnt exists',
         });
       }
-      console.log('1')
-      const valid_password = await Hash.verify(password, serializeUser[0].password);
-      console.log(valid_password, 'valid');
-      console.log('2')
+      const valid_password = await Hash.verify(serializeUser[0].password, password);
       if (!valid_password) {
         return unauthorizedResponse({ response, message: 'Invalid Email or Password' });
       }
-      console.log('3')
       const data = getUserToken(email, serializeUser[0].id);
-      console.log('4')
       return successfulResponse({
         response,
         message: 'Login successfully',
         data,
       });
-    } catch (error) {}
+    } catch (error) {
+      return error
+    }
   }
 }

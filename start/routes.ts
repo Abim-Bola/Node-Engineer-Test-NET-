@@ -26,6 +26,8 @@ Route.get('/', async () => {
 Route.group(() => {
 Route.post('signup', 'UsersController.signup')
 Route.post('login', 'UsersController.login')
-Route.post('add-account', 'WalletsController.addAccount')
-Route.post('add-beneficiary', 'BeneficiariesController.addBeneficiary')
+Route.post('add-account', 'WalletsController.addAccount').middleware('auth')
+Route.post('add-beneficiary', 'BeneficiariesController.addBeneficiary').middleware('auth')
+Route.post('send-beneficiary', 'BeneficiariesController.sendToBeneficiary').middleware('auth')
+Route.post('transfer', 'WalletsController.transfer').middleware('auth')
 }).prefix('/user/')
